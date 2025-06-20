@@ -1,0 +1,119 @@
+document.addEventListener("DOMContentLoaded", function(){
+    navegacionFija();  
+    crearGaleria();
+    resaltarEnlace();
+    scrollNav();
+});
+
+function navegacionFija(){
+    const header = document.querySelector('.header');
+    const sobreFestival = document.querySelector('.sobre-festival');
+    //Revisar cuando el usuario da escroll y sobre pasa el sobre festival
+    document.addEventListener('scroll', function(){
+      
+    if(sobreFestival.getBoundingClientRect().bottom < 1){
+        header.classList.add('fixed');
+    }else{
+        header.classList.remove('fixed');
+        }
+    })
+}
+
+function crearGaleria(){
+    const CANTIDAD_IMAGEN = 16
+    const galeria = document.querySelector(".galeria-imagenes")
+
+    for(let i = 1; i <= CANTIDAD_IMAGEN; i++){
+        const imagen = document.createElement('IMG');
+        imagen.loading = 'lazy'; //Cargar imagenes de forma diferida
+        imagen.width = "300"; //Ancho de la imagen
+        imagen.height = "200"; //Alto de la imagen
+        imagen.src = `src/img/gallery/full/${i}.jpg`;
+        imagen.alt = 'Imagen Galeria';
+      
+          
+        //Event Handler detectar y responder las interacciones del usuario
+        imagen.onclick = function(){
+        mostrarImagen(i)
+        }
+        galeria.appendChild(imagen);  
+    }  
+}
+
+
+function mostrarImagen(i){
+
+     const imagen = document.createElement('IMG');
+        imagen.src = `src/img/gallery/full/${i}.jpg`;
+        imagen.alt = 'Imagen Galeria';
+          
+    //Generar Modal
+    const modal = document.createElement('DIV');
+    modal.classList.add('modal');
+    modal.onclick = cerrarModal; 
+
+    //Boton Cerrar Modal
+    const cerrarModalBtn= document.createElement('BUTTON');
+    cerrarModalBtn.textContent = 'X';
+    cerrarModalBtn.classList.add('btn-cerrar');
+    cerrarModalBtn.onclick = cerrarModal;
+
+    modal.appendChild(imagen);    
+    modal.appendChild(cerrarModalBtn);
+    //Agregar a Html
+    const body = document.querySelector('body');
+    body.classList.add('overflow-hidden');
+    body.appendChild(modal);
+}
+
+function cerrarModal(){
+    const modal = document.querySelector('.modal');
+    modal.classList.add('.fade-Out');
+    setTimeout(() => {
+    modal?.remove();
+    const body = document.querySelector('body');
+    body.classList.remove('overflow-hidden');
+    },200);
+
+    //Si existe el modal eliminalo
+   
+}
+
+function resaltarEnlace(){
+    document.addEventListener('scroll', function(){
+    const sections = document.querySelectorAll('section')
+    const navLInks = document.querySelectorAll('.navegacion-principal a');   
+    let actual = '';
+    sections.forEach(section =>{
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if(window.scrollY >= (sectionTop -sectionHeight /3)){
+           
+            actual = section.id;
+        }
+    })
+   
+    navLInks.forEach(link => {
+        link.classList.remove('activo');
+        if(link.getAttribute('href') === '#'+ actual){
+            link.classList.add('activo');
+        }
+    
+    })
+})
+}
+
+function scrollNav(){
+    const navLinks = document.querySelectorAll('.navegacion-principal a');
+
+    //Agregar un evento a cada enlace
+        navLinks.forEach(link => { 
+        link.addEventListener('click', e =>{
+        e.preventDefault();
+        const sectionScroll = e.target.getAttribute('href')
+        const section = document.querySelector(sectionScroll);
+        //Desplazamiento suave
+        section.scrollIntoView({behavior: 'smooth'});
+        })
+    })
+}

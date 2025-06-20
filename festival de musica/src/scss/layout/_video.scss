@@ -1,0 +1,59 @@
+@use "sass:color";
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+.video{
+    
+    position: relative; //Este siempre va en el padre 
+    min-height: 50rem;// lo minimo que va a tener el video
+    max-height: 70rem ;// lo maximo que va a tener el video
+    overflow: hidden;// esto es porque al darle max-height y el video no se adapta a la pantalla
+    //al darle esta funcionalidad se corta lo que sobresale
+    .overlay{
+   
+ 
+    position: absolute; //este siempre va en el hijo
+    background: linear-gradient(
+        270deg,
+        rgba(v.$morado, 50%),
+        
+        rgba(color.adjust(v.$morado, $lightness: -20%),0.7 )
+        /*esta es la nueva forma de usar el degradado
+           $lightness: brillo
+            $saturation: saturación -20%
+            $hue: tono 0.6 opacidad
+            en el video muestra rgba(darken(v.$morado, 20%), 90%)pero esta da error
+        */
+    );
+
+    inset:0; //Hace que el gradiente se llene completamente
+     display: flex;
+    align-items: center; //centra el texto verticalmente
+   
+    }
+    video{
+        display: block; //hace que el video ocupe todo el ancho
+        width: auto;
+        @include m.desktop{
+            width: 100%;
+        }
+    }
+}
+
+.contenido-video{
+     z-index:10 ; //este es para poder seleccionar las letras de el video porque por la posision
+    //absolute no se pueden seleccionar
+    h2{
+        color:v.$blanco;
+        font-size: 7rem;
+        margin: 0;    
+    }  
+    p{
+        display: inline-block;//se utiliza para poder darle un padding ya que el inline no soporta padding
+        background-color: v.$rosa;
+        padding: 1rem 2rem;
+        color:v.$blanco;
+        font-size: 2.4rem;
+        font-weight: 700;
+        margin:0;
+    }
+}
